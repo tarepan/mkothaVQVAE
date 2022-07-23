@@ -31,6 +31,7 @@ parser.add_argument('--model', '-m')
 parser.add_argument('--force', action='store_true', help='skip the version check')
 parser.add_argument('--count', '-c', type=int, default=3, help='size of the test set')
 parser.add_argument('--partial', action='append', default=[], help='model to partially load')
+parser.add_argument('--result-root', required=True)
 args = parser.parse_args()
 
 if args.float and args.half:
@@ -88,7 +89,7 @@ if use_half:
 for partial_path in args.partial:
     model.load_state_dict(torch.load(partial_path), strict=False)
 
-paths = env.Paths(model_name, data_path)
+paths = env.Paths(model_name, data_path, checkpoint_dir=args.result_root, output_dir=args.result_root)
 
 if args.scratch or args.load == None and not os.path.exists(paths.model_path()):
     # Start from scratch
