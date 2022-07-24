@@ -45,11 +45,10 @@ def process_file(i, path):
     return name
 
 index = []
-with mp.Pool(8) as pool:
-    for i, speaker in enumerate(files):
-        res = pool.starmap_async(process_file, [(i, path) for path in speaker]).get()
-        index.append([x for x in res if x])
-        print(f'Done processing speaker {i}')
+for i, speaker in enumerate(files):
+    res = [process_file(i, path) for path in speaker]
+    index.append([x for x in res if x])
+    print(f'Done processing speaker {i}')
 
 os.makedirs(DATA_PATH, exist_ok=True)
 with open(f'{DATA_PATH}/index.pkl', 'wb') as f:
